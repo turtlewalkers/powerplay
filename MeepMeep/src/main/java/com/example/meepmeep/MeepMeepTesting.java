@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.MeepMeep;
+package com.example.meepmeep;
 
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 public class MeepMeepTesting {
     public static void main(String args[]) {
+
         MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
@@ -23,8 +24,8 @@ public class MeepMeepTesting {
                                 .turn(Math.toRadians(90))
                                 .build()
                 );
-
-        meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
+        meepMeep
+                        .setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)
