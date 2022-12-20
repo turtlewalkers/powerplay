@@ -2,6 +2,9 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="11">
+      <module name="powerplay.meepmeep" target="1.7" />
+      <module name="powerplay.meepmeep.main" target="1.7" />
+      <module name="powerplay.meepmeep.test" target="1.7" />
       <module name="powerplay.meepmeeptesting" target="1.7" />
       <module name="powerplay.meepmeeptesting.main" target="1.7" />
       <module name="powerplay.meepmeeptesting.test" target="1.7" />
