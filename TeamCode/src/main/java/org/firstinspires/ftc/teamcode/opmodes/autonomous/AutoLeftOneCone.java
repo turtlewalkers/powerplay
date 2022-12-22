@@ -146,7 +146,7 @@ public class AutoLeftOneCone extends LinearOpMode {
 //                .forward(3)
 //                .build();
 
-        TrajectorySequence goToHigh = drive.trajectorySequenceBuilder(new Pose2d())
+        TrajectorySequence goToHigh = drive.trajectorySequenceBuilder(new Pose2d(33,-61,Math.toRadians(90)))
                 .strafeLeft(19)
                 .forward(45)
                 .strafeRight(10.5)
