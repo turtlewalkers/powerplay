@@ -15,7 +15,8 @@ public class TurtleRobotAuto {
     public DcMotor rightbackmotor = null;
     public DcMotor leftfrontmotor = null;
     public DcMotor leftbackmotor = null;
-    public Servo ArmServo = null;
+    public Servo armServo = null;
+    public Servo clawServo = null;
     public DcMotor leftslidemotor = null;
     public DcMotor rightslidemotor = null;
     public DistanceSensor distance = null;
@@ -41,25 +42,27 @@ public class TurtleRobotAuto {
         leftbackmotor = hwMap.get(DcMotor.class, "leftbackmotor");
         rightfrontmotor = hwMap.get(DcMotor.class, "rightfrontmotor");
         rightbackmotor = hwMap.get(DcMotor.class, "rightbackmotor");
-        ArmServo = hwMap.get(Servo.class, "ArmServo");
-        leftslidemotor = hwMap.get(DcMotor.class, "leftEncoder");
+        armServo = hwMap.get(Servo.class, "ArmServo");
+        clawServo = hwMap.get(Servo.class, "ClawServo");
+        leftslidemotor = hwMap.get(DcMotor.class, "leftslidemotor");
         rightslidemotor = hwMap.get(DcMotor.class, "rightslidemotor");
         distance = hwMap.get(DistanceSensor.class, "Distance");
 
         leftfrontmotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         leftbackmotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        rightfrontmotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightfrontmotor.setDirection(DcMotorSimple.Direction.FORWARD);
         rightbackmotor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftslidemotor.setDirection(DcMotorSimple.Direction.FORWARD);
         rightslidemotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        ArmServo.setDirection(Servo.Direction.REVERSE);
+        armServo.setDirection(Servo.Direction.REVERSE);
 
         // Set all motors to zero power
         leftfrontmotor.setPower(0);
         leftbackmotor.setPower(0);
         rightfrontmotor.setPower(0);
         rightbackmotor.setPower(0);
-        ArmServo.setPosition(0);
+//        armServo.setPosition(0);
+        clawServo.setPosition(0);
         leftslidemotor.setPower(0);
         rightslidemotor.setPower(0);
 
@@ -69,7 +72,7 @@ public class TurtleRobotAuto {
 //        leftfrontmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        rightfrontmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        rightbackmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        rightslidemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        leftslidemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightslidemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftslidemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
