@@ -186,7 +186,7 @@ public class AutoRightOneCone extends LinearOpMode {
 
         if (isStopRequested()) return;
         SLIDE = 2600;
-        robot.ArmServo.setPosition(0);
+        robot.armServo.setPosition(0);
 //        drive.followTrajectory(traj1);
 //        drive.followTrajectory(traj2);
         drive.followTrajectorySequence(goToHigh);
@@ -195,7 +195,7 @@ public class AutoRightOneCone extends LinearOpMode {
         sleep(300);
         drive.followTrajectory(prepareToDrop);
         sleep(600);
-        robot.ArmServo.setPosition(1);
+        robot.armServo.setPosition(1);
         sleep(600);
         //drive.followTrajectory(traj3);
         if (tagOfInterest == null || tagOfInterest.id == LEFT) {

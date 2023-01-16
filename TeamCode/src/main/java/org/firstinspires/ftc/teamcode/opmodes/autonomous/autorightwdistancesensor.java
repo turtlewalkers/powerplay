@@ -287,7 +287,7 @@ public class autorightwdistancesensor extends LinearOpMode
         sleep(time);
     }
     public void ServoArm(double power, int time) {
-        robot.ArmServo.setPosition(power);
+        robot.armServo.setPosition(power);
         sleep(time);
     }
     public void Alignment() {
