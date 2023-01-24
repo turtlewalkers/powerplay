@@ -11,7 +11,7 @@ public class MeepMeepTesting {
         MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
-                .setConstraints(45, 45, 5.579565990580749, Math.toRadians(259.2284275862069), 10.6)
+                .setConstraints(42, 45, 5.67341411415613, Math.toRadians(259.2284275862069), 11.19)
                 .followTrajectorySequence(drive ->
                         // when x is 33 the robot is running auto left
                         // when x is -33
