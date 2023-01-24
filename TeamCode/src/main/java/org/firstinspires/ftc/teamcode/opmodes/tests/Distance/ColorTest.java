@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes.tests.Distance;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,7 +16,7 @@ public class ColorTest extends LinearOpMode {
     // Define a variable for our color sensor
     TurtleRobotAuto robot = new TurtleRobotAuto(this);
 
-    ColorSensor color;
+    ColorRangeSensor color;
     DistanceSensor distance;
 
     private double ColorDistance;
@@ -44,7 +46,6 @@ public class ColorTest extends LinearOpMode {
         // While the Op Mode is running, update the telemetry values.
         while (opModeIsActive()) {
 
-            Alignment();
             //telemetry.addData("ColorDistance", color.getDistance(DistanceUnit.INCH));
 
 
@@ -57,25 +58,28 @@ public class ColorTest extends LinearOpMode {
 
             // While the Op Mode is running, update the telemetry values.
             while (opModeIsActive()) {
-                Alignment();
                 telemetry.addData("ColorDistance", distance.getDistance(DistanceUnit.INCH));
                 telemetry.addData("", "");
                 telemetry.addData("Distance", distance.getDistance(DistanceUnit.INCH));
                 telemetry.addData("", "");
-
+                ColorAlignemnt();
                 telemetry.addData("Red", color.red());
                 telemetry.addData("Green", color.green());
                 telemetry.addData("Blue", color.blue());
                 telemetry.update();
+                if (color.blue() > color.red() && color.green() > color.red()) {
+                    // drop cone
+                    robot.clawServo.setPosition(0);
+                }
 
             }
         }
     }
 
 
-    public void Alignment() {
+    public void DistanceAlignment() {
         StraightDistance = distance.getDistance(DistanceUnit.INCH);
-        while (StraightDistance > 9) {
+        while (StraightDistance > 5) {
             StraightDistance = distance.getDistance(DistanceUnit.INCH);
             straight(0.1, 1);
             telemetry.addData("", "");
@@ -89,6 +93,15 @@ public class ColorTest extends LinearOpMode {
         return;
     }
 
+    public void ColorAlignemnt() {
+        ColorDistance = color.getDistance(DistanceUnit.INCH);
+        while (ColorDistance > 3) {
+            straight(0.25,1);
+            ColorDistance = color.getDistance(DistanceUnit.INCH);
+        }
+        straight(0,100); // stops robot
+        return;
+    }
     /* public void EncoderDrive(TurtleRobotAuto turtleRobotAuto, double speed,
                              double leftfrontInches, double leftbackInches,
                              double rightfrontInches, double rightbackInches,

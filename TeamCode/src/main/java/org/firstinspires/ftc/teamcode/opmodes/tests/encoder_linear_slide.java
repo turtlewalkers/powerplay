@@ -123,12 +123,12 @@ public class encoder_linear_slide extends LinearOpMode {
 
             // Determine new target position, and pass to motor controller
             newSlideTarget = robot.rightslidemotor.getCurrentPosition() + (int) (sinch * COUNTS_PER_INCH);
-//            robot.leftslidemotor.setTargetPosition(newSlideTarget);
+            robot.leftslidemotor.setTargetPosition(newSlideTarget);
             robot.rightslidemotor.setTargetPosition(newSlideTarget);
 
             // Turn On RUN_TO_POSITION
-//            robot.leftslidemotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            robot.rightslidemotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.leftslidemotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightslidemotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
@@ -143,14 +143,14 @@ public class encoder_linear_slide extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-//                    && (robot.leftslidemotor.isBusy() &&
-                    (robot.rightslidemotor.isBusy())) {
+                     (robot.leftslidemotor.isBusy() &&
+                    (robot.rightslidemotor.isBusy()))) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1", "Running to %7d :%7d",
                         newSlideTarget);
                 telemetry.addData("Path2", "Running at %7d :%7d",
-//                        robot.leftslidemotor.getCurrentPosition(),
+                        robot.leftslidemotor.getCurrentPosition(),
                         robot.rightslidemotor.getCurrentPosition());
                 telemetry.update();
             }
@@ -160,8 +160,8 @@ public class encoder_linear_slide extends LinearOpMode {
             robot.rightslidemotor.setPower(0);
 
             // Turn off RUN_TO_POSITION
-//            robot.leftslidemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            robot.rightslidemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.leftslidemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightslidemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
         }
