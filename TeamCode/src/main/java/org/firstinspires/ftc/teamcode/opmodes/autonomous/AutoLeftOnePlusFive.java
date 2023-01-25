@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -15,6 +14,8 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.ArrayList;
 
@@ -27,9 +28,9 @@ import java.util.ArrayList;
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
 @Autonomous(group="drive")
-@Disabled
-public class AutoLeftOneCone extends LinearOpMode {
+public class AutoLeftOnePlusFive extends LinearOpMode {
     OpenCvCamera camera;
+    private ElapsedTime runtime = new ElapsedTime();
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
     TurtleRobotAuto robot = new TurtleRobotAuto(this);
     static final double FEET_PER_METER = 3.28084;
@@ -41,6 +42,14 @@ public class AutoLeftOneCone extends LinearOpMode {
     double fy = 578.272;
     double cx = 402.145;
     double cy = 221.506;
+
+    static final double     COUNTS_PER_MOTOR_REV    = 537.7 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
+    static final double     PULLEY_DIAMETER_INCHES   =  4.409;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (PULLEY_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.6;
+    static final double     TURN_SPEED              = 0.5;
 
     // UNITS ARE METERS
     double tagsize = 0.166;
@@ -55,6 +64,7 @@ public class AutoLeftOneCone extends LinearOpMode {
 
     public void runOpMode() {
         robot.init(hardwareMap);
+        robot.clawServo.setPosition(0.5);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -148,10 +158,10 @@ public class AutoLeftOneCone extends LinearOpMode {
 //                .forward(3)
 //                .build();
 
-        TrajectorySequence goToHigh = drive.trajectorySequenceBuilder(new Pose2d(33,-61,Math.toRadians(90)))
-                .strafeLeft(19)
-                .forward(45)
-                .strafeRight(10.5)
+        TrajectorySequence goToHigh = drive.trajectorySequenceBuilder(new Pose2d(0,0,0))
+                .strafeRight(5)
+                .back(44)
+                .lineToLinearHeading(new Pose2d(-50, 3, Math.toRadians(60)))
                 .build();
         Trajectory prepareToDrop = drive.trajectoryBuilder(goToHigh.end())
                 .forward(3.12)
@@ -174,33 +184,37 @@ public class AutoLeftOneCone extends LinearOpMode {
                 .build();
 
 
-
         waitForStart();
 
         if (isStopRequested()) return;
-        SLIDE = 2600;
-        robot.armServo.setPosition(0);
+        robot.clawServo.setPosition(0.5);
+//        robot.armServo.setPosition(0.1);
 //        drive.followTrajectory(traj1);
 //        drive.followTrajectory(traj2);
         drive.followTrajectorySequence(goToHigh);
-        LinearSlide(-0.7, SLIDE);
-        LinearSlide(0, 0);
         sleep(500);
-        drive.followTrajectory(prepareToDrop);
-        sleep(300);
-        robot.armServo.setPosition(1);
-        sleep(300);
-        //drive.followTrajectory(traj3);
-        if (tagOfInterest == null || tagOfInterest.id == LEFT) {
-            drive.followTrajectorySequence(parkAtOne);
-        } else if (tagOfInterest.id == MIDDLE) {
-            drive.followTrajectorySequence(parkAtTwo);
-        } else {
-            drive.followTrajectorySequence(parkAtThree);
-        }
-        sleep(100);
-        LinearSlide(0.7, 1800);
-        LinearSlide(0, 0);
+        encoderLinearSlide(robot, 1.0, 110.0, 15);
+        sleep(1000);
+        robot.clawServo.setPosition(0);
+        sleep(500);
+        robot.armServo.setPosition(0.4);
+        encoderLinearSlide(robot, 1.0, -110.0, 15);
+//        robot.armServo.setPosition(0.73);
+//        drive.followTrajectory(prepareToDrop);
+//        sleep(300);
+//        robot.armServo.setPosition(1);
+//        sleep(300);
+//        //drive.followTrajectory(traj3);
+//        if (tagOfInterest == null || tagOfInterest.id == LEFT) {
+//            drive.followTrajectorySequence(parkAtOne);
+//        } else if (tagOfInterest.id == MIDDLE) {
+//            drive.followTrajectorySequence(parkAtTwo);
+//        } else {
+//            drive.followTrajectorySequence(parkAtThree);
+//        }
+//        sleep(100);
+//        LinearSlide(0.7, 1800);
+//        LinearSlide(0, 0);
 
 //        drive.followTrajectory(traj4);
 //          LinearSlide(-0.75, 1700);
@@ -234,6 +248,86 @@ public class AutoLeftOneCone extends LinearOpMode {
         sleep(time);
 
     }
+    public void encoderLinearSlide(TurtleRobotAuto turtleRobotAuto, double speed,
+                                   double sinch,
+                                   double timeoutS) {
+        int newSlideTarget;
+
+
+                                   //\\
+                                  //--\\
+                                 //----\\
+                                //------\\
+                               //--------\\
+                              //----------\\
+                             //------------\\
+                            //--------------\\
+                           //----------------\\
+                          //------------------\\
+                         //--------------------\\
+                        //----------------------\\
+                       //------------------------\\
+                      //--------------------------\\
+                     //----------------------------\\
+                    //------------------------------\\
+                   //--------------------------------\\
+                  //----------------------------------\\
+                 //------------------------------------\\
+                //--------------------------------------\\
+               //----------------------------------------\\
+              //------------------------------------------\\
+             //--------------------------------------------\\
+            //----------------------------------------------\\
+           //------------------------------------------------\\
+          //--------------------------------------------------\\
+         //----------------------------------------------------\\
+        // THIS ONE LINE CAN RUIN YOUR AUTON AND MAKE VARUN MAD \\
+
+
+        sinch *= -1;
+
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newSlideTarget = robot.leftslidemotor.getCurrentPosition() + (int) (sinch * COUNTS_PER_INCH);
+            robot.leftslidemotor.setTargetPosition(newSlideTarget);
+            robot.rightslidemotor.setTargetPosition(newSlideTarget);
+
+            // Turn On RUN_TO_POSITION
+            robot.leftslidemotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightslidemotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            robot.leftslidemotor.setPower(Math.abs(speed));
+            robot.rightslidemotor.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the  will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the  continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (robot.leftslidemotor.isBusy() &&
+                            (robot.rightslidemotor.isBusy()))) {
+            }
+
+            // Stop all motion;
+            robot.leftslidemotor.setPower(0);
+            robot.rightslidemotor.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.leftslidemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightslidemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            //  sleep(250);   // optional pause after each move
+        }
+    }
     public void FrontBack(double speed, long time){
         robot.leftfrontmotor.setPower(speed);
         robot.rightfrontmotor.setPower(speed);
@@ -251,6 +345,8 @@ public class AutoLeftOneCone extends LinearOpMode {
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
     }
 }
+
+
 
 
 

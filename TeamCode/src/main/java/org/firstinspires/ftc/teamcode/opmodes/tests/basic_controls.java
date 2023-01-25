@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name="basic controls")
+@Disabled
 public class basic_controls extends LinearOpMode{
     TurtleRobotAuto robot = new TurtleRobotAuto(this);
     @Override

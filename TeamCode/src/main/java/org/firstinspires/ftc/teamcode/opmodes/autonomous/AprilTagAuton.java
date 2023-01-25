@@ -22,6 +22,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -33,7 +34,7 @@ import org.firstinspires.ftc.teamcode.robot.TurtleRobotAuto;
 import java.util.ArrayList;
 
 @Autonomous(name="AUTONOMOUS TAP HERE")
-//@Disabled
+@Disabled
 public class AprilTagAuton extends LinearOpMode
 {
     OpenCvCamera camera;

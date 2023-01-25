@@ -63,6 +63,7 @@ import org.firstinspires.ftc.teamcode.robot.TurtleRobotAuto;
  */
 
 @Autonomous(name="Robot: Auto Drive By Encoder", group="Tests")
+@Disabled
 public class encoder extends LinearOpMode {
 
     /* Declare OpMode members. */

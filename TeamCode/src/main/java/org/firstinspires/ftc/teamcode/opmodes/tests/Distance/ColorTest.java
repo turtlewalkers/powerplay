@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.robot.TurtleRobotAuto;
 
 @Autonomous
+@Disabled
 public class ColorTest extends LinearOpMode {
     // Define a variable for our color sensor
     TurtleRobotAuto robot = new TurtleRobotAuto(this);

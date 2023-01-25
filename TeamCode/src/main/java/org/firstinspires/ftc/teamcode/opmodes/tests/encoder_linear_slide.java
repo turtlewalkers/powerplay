@@ -63,7 +63,7 @@ import org.firstinspires.ftc.teamcode.robot.TurtleRobotAuto;
  */
 
 
-@Autonomous(name="Robot: Auto Drive Linear Slide", group="Robot")
+@Autonomous(name="Encoder Linear Slide", group="Robot")
 @Disabled
 public class encoder_linear_slide extends LinearOpMode {
 
@@ -90,19 +90,21 @@ public class encoder_linear_slide extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        robot.init(hardwareMap);
 
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         // Step through each leg of the path,
-        encoderLinearSlide(robot, DRIVE_SPEED, 10.0, 1.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderLinearSlide(robot, DRIVE_SPEED, 70, 15.0);  // S1: Forward 47 Inches with 5 Sec timeout
 //        encoderDrive(TURN_SPEED,   10, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderLinearSlide(robot, DRIVE_SPEED,  -10.0, 1.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        sleep(3000);
+        encoderLinearSlide(robot, DRIVE_SPEED,  -70, 15.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        sleep(1000);  // pause to display final telemetry message.
+        sleep(1000);  // pause tobvv  display final telemetry message.
     }
 
     /*
@@ -117,12 +119,12 @@ public class encoder_linear_slide extends LinearOpMode {
                                    double sinch,
                                    double timeoutS) {
         int newSlideTarget;
-
+        sinch *= -1;
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newSlideTarget = robot.rightslidemotor.getCurrentPosition() + (int) (sinch * COUNTS_PER_INCH);
+            newSlideTarget = robot.leftslidemotor.getCurrentPosition() + (int) (sinch * COUNTS_PER_INCH);
             robot.leftslidemotor.setTargetPosition(newSlideTarget);
             robot.rightslidemotor.setTargetPosition(newSlideTarget);
 
@@ -145,14 +147,6 @@ public class encoder_linear_slide extends LinearOpMode {
                     (runtime.seconds() < timeoutS) &&
                      (robot.leftslidemotor.isBusy() &&
                     (robot.rightslidemotor.isBusy()))) {
-
-                // Display it for the driver.
-                telemetry.addData("Path1", "Running to %7d :%7d",
-                        newSlideTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d",
-                        robot.leftslidemotor.getCurrentPosition(),
-                        robot.rightslidemotor.getCurrentPosition());
-                telemetry.update();
             }
 
             // Stop all motion;
