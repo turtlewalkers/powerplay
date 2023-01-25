@@ -1,5 +1,6 @@
 package com.example.meepmeep;
 
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -16,28 +17,20 @@ public class MeepMeepTesting {
                         // when x is 33 the robot is running auto left
                         // when x is -33
                         drive.trajectorySequenceBuilder(new Pose2d(33,-61,Math.toRadians(90)))
-                                .strafeLeft(19)
-                                .forward(45)
-                                .strafeRight(10.5)
-                                .forward(3.12)
-                                .lineToLinearHeading(new Pose2d(56,-11,0))
-                                .lineToLinearHeading(new Pose2d(24, -13,Math.toRadians(90)))
+                                .strafeRight(19)
+                                .lineToLinearHeading(new Pose2d(45, -10, Math.PI))
+                .forward(3.12)
 
-                                .lineToLinearHeading(new Pose2d(56,-11,0))
-                                .lineToLinearHeading(new Pose2d(24, -13,Math.toRadians(90)))
 
-                                .lineToLinearHeading(new Pose2d(56,-11,0))
-                                .lineToLinearHeading(new Pose2d(24, -13,Math.toRadians(90)))
-
-                                .lineToLinearHeading(new Pose2d(56,-11,0))
-                                .lineToLinearHeading(new Pose2d(24, -13,Math.toRadians(90)))
-
-                                .lineToLinearHeading(new Pose2d(56,-11,0))
-                                .lineToLinearHeading(new Pose2d(24, -13,Math.toRadians(90)))
-
-                                .strafeRight(32.1)
-                                .back(22)
-                                .build()
+                .strafeLeft(12)
+                .back(4)
+                .turn(Math.toRadians(-90))
+                .strafeRight(10)
+                .back(4)
+                .turn(Math.toRadians(-90))
+                .strafeRight(32.1)
+                .back(22)
+                .build()
                 );
         meepMeep
                         .setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous
-//@Disabled
+@Disabled
 public class motortest extends LinearOpMode{
     @Override
     public void runOpMode() {
