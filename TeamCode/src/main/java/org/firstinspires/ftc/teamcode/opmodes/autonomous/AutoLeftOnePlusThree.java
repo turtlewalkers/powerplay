@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -29,7 +28,7 @@ import java.util.ArrayList;
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
 @Autonomous(group="drive")
-public class AutoLeftOnePlusFive extends LinearOpMode {
+public class AutoLeftOnePlusThree extends LinearOpMode {
     OpenCvCamera camera;
     private ElapsedTime runtime = new ElapsedTime();
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -177,13 +176,13 @@ public class AutoLeftOnePlusFive extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-50,3,Math.toRadians(65)))
                 .build();
 
-        TrajectorySequence parkAtOne = drive.trajectorySequenceBuilder(goToConeStack.end())
+        TrajectorySequence parkAtThree = drive.trajectorySequenceBuilder(goToConeStack.end())
                 .lineToLinearHeading(new Pose2d(-50, -20, Math.toRadians(90)))
                 .build();
         TrajectorySequence parkAtTwo = drive.trajectorySequenceBuilder(goToConeStack.end())
                 .lineToLinearHeading(new Pose2d(-50, -8, Math.toRadians(90)))
                 .build();
-        TrajectorySequence parkAtThree = drive.trajectorySequenceBuilder(goToConeStack.end())
+        TrajectorySequence parkAtOne = drive.trajectorySequenceBuilder(goToConeStack.end())
                 .lineToLinearHeading(new Pose2d(-50, 14, Math.toRadians(90)))
                 .build();
 
