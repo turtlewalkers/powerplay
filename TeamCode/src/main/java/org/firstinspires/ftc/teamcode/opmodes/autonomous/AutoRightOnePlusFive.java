@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
 @Autonomous(group="drive")
-public class AutoLeftOnePlusFive extends LinearOpMode {
+public class AutoRightOnePlusFive extends LinearOpMode {
     OpenCvCamera camera;
     private ElapsedTime runtime = new ElapsedTime();
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -165,26 +165,31 @@ public class AutoLeftOnePlusFive extends LinearOpMode {
 //                .build();
 
         TrajectorySequence alignToHigh = drive.trajectorySequenceBuilder(new Pose2d(0,0,0))
-                .strafeRight(5)
+                .strafeLeft(5)
                 .back(44)
-                .lineToLinearHeading(new Pose2d(-50, 3, Math.toRadians(65)))
+                .lineToLinearHeading(new Pose2d(-50, -3, Math.toRadians(65)))
                 .build();
 
         Trajectory goToConeStack = drive.trajectoryBuilder(alignToHigh.end())
-                .lineToLinearHeading(new Pose2d(-47, 10, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-47, -12, Math.toRadians(270)))
                 .build();
         Trajectory goBack = drive.trajectoryBuilder(goToConeStack.end())
-                .lineToLinearHeading(new Pose2d(-50,3,Math.toRadians(65)))
+                .lineToLinearHeading(new Pose2d(-50,-3,Math.toRadians(245)))
                 .build();
 
         TrajectorySequence parkAtOne = drive.trajectorySequenceBuilder(goToConeStack.end())
-                .lineToLinearHeading(new Pose2d(-50, -20, Math.toRadians(90)))
+                .strafeLeft(12)
+                .back(4)
+                .turn(Math.toRadians(-90))
                 .build();
         TrajectorySequence parkAtTwo = drive.trajectorySequenceBuilder(goToConeStack.end())
-                .lineToLinearHeading(new Pose2d(-50, -8, Math.toRadians(90)))
+                .strafeRight(10)
+                .back(4)
+                .turn(Math.toRadians(-90))
                 .build();
         TrajectorySequence parkAtThree = drive.trajectorySequenceBuilder(goToConeStack.end())
-                .lineToLinearHeading(new Pose2d(-50, 14, Math.toRadians(90)))
+                .strafeRight(32.1)
+                .back(22)
                 .build();
 
 
@@ -193,61 +198,51 @@ public class AutoLeftOnePlusFive extends LinearOpMode {
         if (isStopRequested()) return;
 
 //        // Go to high junction
-        robot.clawServo.setPosition(1);
-        drive.followTrajectorySequence(alignToHigh);
-
-
-        // Cone 1
-        encoderLinearSlideUp(robot, 1.0, 2.1);
-        sleep(100);
+        encoderLinearSlideUp(robot, 1.0, 3);
+        sleep(500);
         robot.clawServo.setPosition(0.5);
         sleep(100);
         robot.armServo.setPosition(0.73);
-        encoderLinearSlideDown(robot, 1.0, 2.1);
+        encoderLinearSlideDown(robot, 1.0, 3);
         robot.clawServo.setPosition(0.5);
         drive.followTrajectory(goToConeStack);
-        sleep(100);
-        robot.clawServo.setPosition(1);
         sleep(200);
+        robot.clawServo.setPosition(0.5);
+        sleep(500);
         robot.armServo.setPosition(0);
-        sleep(200);
 
         // Cone 2, 3, 4, 5
-        for (int i = 1; i <= 2; i++) {
+        for (int i = 1; i <= 4; i++) {
             drive.followTrajectory(goBack);
-            encoderLinearSlideUp(robot, 1.0, 2.1);
+            encoderLinearSlideUp(robot, 1.0, 3);
+            sleep(100);
             robot.clawServo.setPosition(0.5);
+            sleep(500);
+            robot.armServo.setPosition(0.73);
             sleep(200);
-            robot.armServo.setPosition(0.4);
-            encoderAndServo(i);
+            encoderLinearSlideDown(robot, 1.0, 3);
+            robot.armServo.setPosition(0.76+(i*0.03));
             goToConeStack = drive.trajectoryBuilder(alignToHigh.end())
-                    .lineToLinearHeading(new Pose2d(-47, 10.5-(i*1/2), Math.toRadians(90)))
+                    .lineToLinearHeading(new Pose2d(-47, 12-(i*1/2), Math.toRadians(90)))
                     .build();
             drive.followTrajectory(goToConeStack);
             sleep(200);
             robot.clawServo.setPosition(1);
-            sleep(200);
+            sleep(500);
             robot.armServo.setPosition(0);
         }
-        drive.followTrajectory(goBack);
-        encoderLinearSlideUp(robot, 1.0, 2.1);
-        robot.clawServo.setPosition(0.5);
-        sleep(200);
-        robot.armServo.setPosition(0.4);
-        encoderLinearSlideDown(robot,1.0,2.1);
 //        drive.followTrajectory(prepareToDrop);
 //        sleep(300);
 //        robot.armServo.setPosition(1);
 //        sleep(300);
 //        //drive.followTrajectory(traj3);
-        robot.armServo.setPosition(0);
-        if (tagOfInterest == null || tagOfInterest.id == LEFT) {
-            drive.followTrajectorySequence(parkAtOne);
-        } else if (tagOfInterest.id == MIDDLE) {
-            drive.followTrajectorySequence(parkAtTwo);
-        } else {
-            drive.followTrajectorySequence(parkAtThree);
-        }
+//        if (tagOfInterest == null || tagOfInterest.id == LEFT) {
+//            drive.followTrajectorySequence(parkAtOne);
+//        } else if (tagOfInterest.id == MIDDLE) {
+//            drive.followTrajectorySequence(parkAtTwo);
+//        } else {
+//            drive.followTrajectorySequence(parkAtThree);
+//        }
 //        sleep(100);
 //        LinearSlide(0.7, 1800);
 //        LinearSlide(0, 0);
@@ -319,7 +314,10 @@ public class AutoLeftOnePlusFive extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the  continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() && (runtime.seconds() < timeoutS) && (robot.leftslidemotor.isBusy() || (robot.rightslidemotor.isBusy()))) {
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (robot.leftslidemotor.isBusy() ||
+                            (robot.rightslidemotor.isBusy()))) {
                 telemetry.addLine("Target:" + String.valueOf(newSlideTarget));
                 telemetry.addLine("Current:" + String.valueOf(robot.leftslidemotor.getCurrentPosition()));
                 telemetry.update();
@@ -390,11 +388,6 @@ public class AutoLeftOnePlusFive extends LinearOpMode {
         }
         telemetry.addLine("Final:" + String.valueOf(robot.leftslidemotor.getCurrentPosition()));
         telemetry.update();
-
-    }
-    public void encoderAndServo(int i) {
-        robot.armServo.setPosition(0.77+(i*0.02));
-        encoderLinearSlideDown(robot, 1.0, 2.1);
 
     }
     public void FrontBack(double speed, long time){

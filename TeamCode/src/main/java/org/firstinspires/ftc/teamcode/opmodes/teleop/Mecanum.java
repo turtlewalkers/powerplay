@@ -27,7 +27,7 @@ public class Mecanum extends LinearOpMode {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         TurtleRobotTeleOp robot = new TurtleRobotTeleOp(this);
         robot.init(hardwareMap);
-        robot.clawServo.setPosition(0);
+        robot.clawServo.setPosition(1);
         waitForStart();
         while (!isStopRequested()) {
             drive.setWeightedDrivePower(
@@ -45,8 +45,8 @@ public class Mecanum extends LinearOpMode {
             while (gamepad2.b) {robot.armServo.setPosition(0.73);}
 //            while (gamepad2.dpad_right) {robot.armServo.setPosition(0.7);}
 //            while (gamepad2.dpad_left) {robot.armServo.setPosition(0.5);}
-            while (gamepad2.left_bumper) {robot.clawServo.setPosition(0);}
-            while (gamepad2.right_bumper) {robot.clawServo.setPosition(0.5);}
+            while (gamepad2.left_bumper) {robot.clawServo.setPosition(0.5);}
+            while (gamepad2.right_bumper) {robot.clawServo.setPosition(1);} // Close
 
 
             telemetry.addLine("motor name               motor speed");
