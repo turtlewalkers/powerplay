@@ -16,20 +16,12 @@ public class MeepMeepTesting {
                 .followTrajectorySequence(drive ->
                         // when x is 33 the robot is running auto left
                         // when x is -33
-                        drive.trajectorySequenceBuilder(new Pose2d(33,-61,Math.toRadians(90)))
-                                .strafeRight(19)
-                                .lineToLinearHeading(new Pose2d(45, -10, Math.PI))
-                .forward(3.12)
+                        drive.trajectorySequenceBuilder(new Pose2d(0,0,Math.toRadians(90)))
 
 
-                .strafeLeft(12)
-                .back(4)
-                .turn(Math.toRadians(-90))
-                .strafeRight(10)
-                .back(4)
-                .turn(Math.toRadians(-90))
-                .strafeRight(32.1)
-                .back(22)
+                .strafeRight(5)
+                .back(44)
+                .splineToLinearHeading(new Pose2d(3, -50, Math.toRadians(0)), Math.toRadians(65))
                 .build()
                 );
         meepMeep

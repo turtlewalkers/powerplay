@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -164,84 +165,99 @@ public class AutoRightOnePlusThree extends LinearOpMode {
 //                .build();
 
         TrajectorySequence alignToHigh = drive.trajectorySequenceBuilder(new Pose2d(0,0,0))
-                .strafeLeft(5)
+                .strafeRight(5)
                 .back(44)
-                .lineToLinearHeading(new Pose2d(-50, -3, Math.toRadians(65)))
+                .lineToLinearHeading(new Pose2d(-54, -17, Math.toRadians(315)))
+//                .splineTo(new Vector2d(-48, 3), Math.toRadians(65-180))
                 .build();
 
         Trajectory goToConeStack = drive.trajectoryBuilder(alignToHigh.end())
-                .lineToLinearHeading(new Pose2d(-47, -12, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(-52, -20, Math.toRadians(290)))
                 .build();
         Trajectory goBack = drive.trajectoryBuilder(goToConeStack.end())
-                .lineToLinearHeading(new Pose2d(-50,-3,Math.toRadians(245)))
+                .lineToLinearHeading(new Pose2d(-54,-17,Math.toRadians(315)))
                 .build();
 
-        TrajectorySequence parkAtOne = drive.trajectorySequenceBuilder(goToConeStack.end())
-                .strafeLeft(12)
-                .back(4)
-                .turn(Math.toRadians(-90))
+        TrajectorySequence parkAtThree = drive.trajectorySequenceBuilder(goToConeStack.end())
+                .lineToLinearHeading(new Pose2d(-50, -20, Math.toRadians(90)))
                 .build();
         TrajectorySequence parkAtTwo = drive.trajectorySequenceBuilder(goToConeStack.end())
-                .strafeRight(10)
-                .back(4)
-                .turn(Math.toRadians(-90))
+                .lineToLinearHeading(new Pose2d(-50, -8, Math.toRadians(90)))
                 .build();
-        TrajectorySequence parkAtThree = drive.trajectorySequenceBuilder(goToConeStack.end())
-                .strafeRight(32.1)
-                .back(22)
+        TrajectorySequence parkAtOne = drive.trajectorySequenceBuilder(goToConeStack.end())
+                .lineToLinearHeading(new Pose2d(-50, 15.5, Math.toRadians(90)))
                 .build();
-
 
         waitForStart();
 
-        if (isStopRequested()) return;
+        if (isStopRequested())  return;
 
 //        // Go to high junction
-        encoderLinearSlideUp(robot, 1.0, 3);
-        sleep(500);
+        robot.clawServo.setPosition(1);
+        drive.followTrajectorySequence(alignToHigh);
+
+
+        // Cone 1
+        encoderLinearSlideUp(robot, 1.0, 2.1);
+        sleep(100);
         robot.clawServo.setPosition(0.5);
         sleep(100);
         robot.armServo.setPosition(0.73);
-        encoderLinearSlideDown(robot, 1.0, 3);
+        encoderLinearSlideDown(robot, 1.0, 2.1);
         robot.clawServo.setPosition(0.5);
         drive.followTrajectory(goToConeStack);
+        sleep(100);
+        robot.clawServo.setPosition(1);
         sleep(200);
-        robot.clawServo.setPosition(0.5);
-        sleep(500);
         robot.armServo.setPosition(0);
+        sleep(200);
 
         // Cone 2, 3, 4, 5
-        for (int i = 1; i <= 4; i++) {
-            drive.followTrajectory(goBack);
-            encoderLinearSlideUp(robot, 1.0, 3);
-            sleep(100);
-            robot.clawServo.setPosition(0.5);
-            sleep(500);
-            robot.armServo.setPosition(0.73);
-            sleep(200);
-            encoderLinearSlideDown(robot, 1.0, 3);
-            robot.armServo.setPosition(0.76+(i*0.03));
-            goToConeStack = drive.trajectoryBuilder(alignToHigh.end())
-                    .lineToLinearHeading(new Pose2d(-47, 12-(i*1/2), Math.toRadians(90)))
-                    .build();
-            drive.followTrajectory(goToConeStack);
-            sleep(200);
-            robot.clawServo.setPosition(1);
-            sleep(500);
-            robot.armServo.setPosition(0);
-        }
+//        for (int i = 1; i <= 2; i++) {
+//            drive.followTrajectory(goBack);
+//            encoderLinearSlideUp(robot, 1.0, 2.1);
+//            robot.clawServo.setPosition(0.2);
+//            sleep(200);
+//            robot.armServo.setPosition(0.4);
+//            encoderAndServo(i);
+//            goToConeStack = drive.trajectoryBuilder(alignToHigh.end())
+//                    .lineToLinearHeading(new Pose2d(-47, 10.5-(i*1/2), Math.toRadians(90)))
+//                    .build();
+//            drive.followTrajectory(goToConeStack);
+//            sleep(200);
+//            robot.clawServo.setPosition(1);
+//            sleep(200);
+//            robot.armServo.setPosition(0);
+//        }
+//        drive.followTrajectory(goBack);
+//        encoderLinearSlideUp(robot, 1.0, 2.1);
+//        robot.clawServo.setPosition(0.5);
+//        sleep(210);
+//        robot.armServo.setPosition(0.4);
+//        encoderLinearSlideDown(robot,1.0,2.1);
+
+
 //        drive.followTrajectory(prepareToDrop);
 //        sleep(300);
 //        robot.armServo.setPosition(1);
 //        sleep(300);
 //        //drive.followTrajectory(traj3);
+
+
+//        robot.armServo.setPosition(0);
 //        if (tagOfInterest == null || tagOfInterest.id == LEFT) {
 //            drive.followTrajectorySequence(parkAtOne);
+//            stopRobot();
 //        } else if (tagOfInterest.id == MIDDLE) {
 //            drive.followTrajectorySequence(parkAtTwo);
+//            stopRobot();
 //        } else {
 //            drive.followTrajectorySequence(parkAtThree);
+//            stopRobot();
 //        }
+//        stopRobot();
+
+
 //        sleep(100);
 //        LinearSlide(0.7, 1800);
 //        LinearSlide(0, 0);
@@ -313,10 +329,7 @@ public class AutoRightOnePlusThree extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the  continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (robot.leftslidemotor.isBusy() ||
-                            (robot.rightslidemotor.isBusy()))) {
+            while (opModeIsActive() && (runtime.seconds() < timeoutS) && (robot.leftslidemotor.isBusy() || (robot.rightslidemotor.isBusy()))) {
                 telemetry.addLine("Target:" + String.valueOf(newSlideTarget));
                 telemetry.addLine("Current:" + String.valueOf(robot.leftslidemotor.getCurrentPosition()));
                 telemetry.update();
@@ -389,6 +402,11 @@ public class AutoRightOnePlusThree extends LinearOpMode {
         telemetry.update();
 
     }
+    public void encoderAndServo(int i) {
+        robot.armServo.setPosition(0.77+(i*0.02));
+        encoderLinearSlideDown(robot, 1.0, 2.1);
+
+    }
     public void FrontBack(double speed, long time){
         robot.leftfrontmotor.setPower(speed);
         robot.rightfrontmotor.setPower(speed);
@@ -404,5 +422,11 @@ public class AutoRightOnePlusThree extends LinearOpMode {
         telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+    }
+    public void stopRobot() {
+        robot.leftfrontmotor.setPower(0);
+        robot.leftbackmotor.setPower(0);
+        robot.rightfrontmotor.setPower(0);
+        robot.rightbackmotor.setPower(0);
     }
 }
