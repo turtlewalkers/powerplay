@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -29,7 +28,7 @@ import java.util.ArrayList;
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
 @Autonomous(group="drive")
-public class AutoRightOnePlusThree extends LinearOpMode {
+public class AutoRightPark extends LinearOpMode {
     OpenCvCamera camera;
     private ElapsedTime runtime = new ElapsedTime();
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -178,14 +177,17 @@ public class AutoRightOnePlusThree extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-54,-17,Math.toRadians(315)))
                 .build();
 
-        TrajectorySequence parkAtThree = drive.trajectorySequenceBuilder(goToConeStack.end())
-                .lineToLinearHeading(new Pose2d(-50, -20, Math.toRadians(90)))
+        TrajectorySequence parkAtThree = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                .strafeRight(35)
+                .lineToLinearHeading(new Pose2d(-50, -20, Math.toRadians(0)))
                 .build();
-        TrajectorySequence parkAtTwo = drive.trajectorySequenceBuilder(goToConeStack.end())
-                .lineToLinearHeading(new Pose2d(-50, -8, Math.toRadians(90)))
+        TrajectorySequence parkAtTwo = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                .strafeRight(8)
+                .lineToLinearHeading(new Pose2d(-50, -8, Math.toRadians(0)))
                 .build();
-        TrajectorySequence parkAtOne = drive.trajectorySequenceBuilder(goToConeStack.end())
-                .lineToLinearHeading(new Pose2d(-50, 15.5, Math.toRadians(90)))
+        TrajectorySequence parkAtOne = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                .strafeLeft(15.5)
+                .lineToLinearHeading(new Pose2d(-50, 15.5, Math.toRadians(0)))
                 .build();
 
         waitForStart();
@@ -193,24 +195,24 @@ public class AutoRightOnePlusThree extends LinearOpMode {
         if (isStopRequested())  return;
 
 //        // Go to high junction
-        robot.clawServo.setPosition(1);
-        drive.followTrajectorySequence(alignToHigh);
+//        robot.clawServo.setPosition(1);
+//        drive.followTrajectorySequence(alignToHigh);
 
 
         // Cone 1
-        encoderLinearSlideUp(robot, 1.0, 2.1);
-        sleep(100);
-        robot.clawServo.setPosition(0.5);
-        sleep(100);
-        robot.armServo.setPosition(0.73);
-        encoderLinearSlideDown(robot, 1.0, 2.1);
-        robot.clawServo.setPosition(0.5);
-        drive.followTrajectory(goToConeStack);
-        sleep(100);
-        robot.clawServo.setPosition(1);
-        sleep(200);
-        robot.armServo.setPosition(0);
-        sleep(200);
+//        encoderLinearSlideUp(robot, 1.0, 2.1);
+//        sleep(100);
+//        robot.clawServo.setPosition(0.5);
+//        sleep(100);
+//        robot.armServo.setPosition(0.73);
+//        encoderLinearSlideDown(robot, 1.0, 2.1);
+//        robot.clawServo.setPosition(0.5);
+//        drive.followTrajectory(goToConeStack);
+//        sleep(100);
+//        robot.clawServo.setPosition(1);
+//        sleep(200);
+//        robot.armServo.setPosition(0);
+//        sleep(200);
 
         // Cone 2, 3, 4, 5
 //        for (int i = 1; i <= 2; i++) {
@@ -245,17 +247,17 @@ public class AutoRightOnePlusThree extends LinearOpMode {
 
 
 //        robot.armServo.setPosition(0);
-//        if (tagOfInterest == null || tagOfInterest.id == LEFT) {
-//            drive.followTrajectorySequence(parkAtOne);
-//            stopRobot();
-//        } else if (tagOfInterest.id == MIDDLE) {
-//            drive.followTrajectorySequence(parkAtTwo);
-//            stopRobot();
-//        } else {
-//            drive.followTrajectorySequence(parkAtThree);
-//            stopRobot();
-//        }
-//        stopRobot();
+        if (tagOfInterest == null || tagOfInterest.id == LEFT) {
+            drive.followTrajectorySequence(parkAtOne);
+            stopRobot();
+        } else if (tagOfInterest.id == MIDDLE) {
+            drive.followTrajectorySequence(parkAtTwo);
+            stopRobot();
+        } else {
+            drive.followTrajectorySequence(parkAtThree);
+            stopRobot();
+        }
+        stopRobot();
 
 
 //        sleep(100);
