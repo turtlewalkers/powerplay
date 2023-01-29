@@ -174,18 +174,18 @@ public class AprilTagAuton extends LinearOpMode
             strafeLeft(0.5, 1000);
             stopRobot();
             sleep(1000);
-            straight(0.5, 1100);
+            straight(-0.5, 1100);
             stopRobot();
             stop();
         }else if(tagOfInterest.id == MIDDLE){
-            straight(0.5, 1100);
+            straight(-0.5, 1100);
             stopRobot();
             stop();
         }else{
             strafeRight(0.5, 1200);
             stopRobot();
             sleep(1000);
-            straight(0.5, 1100);
+            straight(-0.5, 1100);
             stopRobot();
             stop();
         }

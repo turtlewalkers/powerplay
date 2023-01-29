@@ -25,7 +25,6 @@ import java.util.List;
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
 @TeleOp(group = "drive")
-@Disabled
 public class WheelTest extends LinearOpMode {
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -61,6 +60,10 @@ public class WheelTest extends LinearOpMode {
             telemetry.addData("Left Encoder Distance", leftEncoderDistance);
             telemetry.addData("Right Encoder Distance", rightEncoderDistance);
             telemetry.addData("Front Encoder Distance", frontEncoderDistance);
+            l = robot.getWheelVelocities();
+            telemetry.addData("Left Encoder Distance", l[0]);
+            telemetry.addData("Right Encoder Distance", l[1]);
+            telemetry.addData("Front Encoder Distance", l[2]);
             telemetry.update();
         }
     }

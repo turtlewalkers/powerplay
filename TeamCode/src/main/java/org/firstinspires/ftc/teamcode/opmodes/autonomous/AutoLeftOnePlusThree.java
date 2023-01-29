@@ -166,15 +166,15 @@ public class AutoLeftOnePlusThree extends LinearOpMode {
         TrajectorySequence alignToHigh = drive.trajectorySequenceBuilder(new Pose2d(0,0,0))
                 .strafeRight(5)
                 .back(44)
-                .lineToLinearHeading(new Pose2d(-51, 5, Math.toRadians(65)))
+                .lineToLinearHeading(new Pose2d(-50, 3, Math.toRadians(65)))
 //                .splineToLinearHeading(new Pose2d(-50, 3, Math.toRadians(0)), Math.toRadians(65))
                 .build();
 
         Trajectory goToConeStack = drive.trajectoryBuilder(alignToHigh.end())
-                .lineToLinearHeading(new Pose2d(-48, 12, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-49, 12, Math.toRadians(90)))
                 .build();
         Trajectory goBack = drive.trajectoryBuilder(goToConeStack.end())
-                .lineToLinearHeading(new Pose2d(-51,5,Math.toRadians(65)))
+                .lineToLinearHeading(new Pose2d(-50,3,Math.toRadians(65)))
                 .build();
 
         TrajectorySequence parkAtThree = drive.trajectorySequenceBuilder(goToConeStack.end())
@@ -208,28 +208,30 @@ public class AutoLeftOnePlusThree extends LinearOpMode {
         drive.followTrajectory(goToConeStack);
         sleep(100);
         robot.clawServo.setPosition(1);
+        sleep(200);
+        robot.armServo.setPosition(0);
+        sleep(100);
+
+
+        // Cone 2
+        drive.followTrajectory(goBack);
+        encoderLinearSlideUp(robot, 1.0, 2.3);
+        robot.clawServo.setPosition(0.5);
+        sleep(100);
+        robot.armServo.setPosition(0.4);
+        encoderAndServo(1);
+        goToConeStack = drive.trajectoryBuilder(alignToHigh.end())
+                .lineToLinearHeading(new Pose2d(-50, 12.5-(1*1/2), Math.toRadians(90)))
+                .build();
+        drive.followTrajectory(goToConeStack);
+        sleep(100);
+        robot.clawServo.setPosition(1);
         sleep(100);
         robot.armServo.setPosition(0);
+        sleep(100);
 
-        // Cone 2, 3
-        for (int i = 1; i <= 2; i++) {
-            drive.followTrajectory(goBack);
-            encoderLinearSlideUp(robot, 1.0, 2.3);
-            robot.clawServo.setPosition(0.5);
-            sleep(100);
-            robot.armServo.setPosition(0.4);
-            encoderAndServo(i);
-            goToConeStack = drive.trajectoryBuilder(alignToHigh.end())
-                    .lineToLinearHeading(new Pose2d(-48, 12-(i*1/2), Math.toRadians(90)))
-                    .build();
-            drive.followTrajectory(goToConeStack);
-            sleep(100);
-            robot.clawServo.setPosition(1);
-            sleep(100);
-            robot.armServo.setPosition(0);
-        }
 
-        // Cone 4
+        // Cone 3
         drive.followTrajectory(goBack);
         encoderLinearSlideUp(robot, 1.0, 2.1);
         robot.clawServo.setPosition(0.5);
