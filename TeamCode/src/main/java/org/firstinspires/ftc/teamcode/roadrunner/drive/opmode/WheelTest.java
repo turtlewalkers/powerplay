@@ -38,6 +38,7 @@ public class WheelTest extends LinearOpMode {
         double rightEncoderDistance = 0.0;
         double frontEncoderDistance = 0.0;
         List<Double> arr;
+        List<Double> velos;
         waitForStart();
 
         while (!isStopRequested()) {
@@ -60,10 +61,10 @@ public class WheelTest extends LinearOpMode {
             telemetry.addData("Left Encoder Distance", leftEncoderDistance);
             telemetry.addData("Right Encoder Distance", rightEncoderDistance);
             telemetry.addData("Front Encoder Distance", frontEncoderDistance);
-            l = robot.getWheelVelocities();
-            telemetry.addData("Left Encoder Distance", l[0]);
-            telemetry.addData("Right Encoder Distance", l[1]);
-            telemetry.addData("Front Encoder Distance", l[2]);
+            velos = robot.getWheelVelocities();
+            telemetry.addData("Left Encoder Distance", velos.get(0));
+            telemetry.addData("Right Encoder Distance", velos.get(1));
+            telemetry.addData("Front Encoder Distance", velos.get(2));
             telemetry.update();
         }
     }
